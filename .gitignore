@@ -1,0 +1,8 @@
+bin
+experiments - compiled  (non git)
+out
+.idea
+/FRI-GVGAI.iml
+/build.xml
+/.project
+/FRI-GVGAI.txt

@@ -385,15 +385,15 @@ public final class Metrics {
 
     public static void updateFiles(int r, int g, int l, String firstStringLine)
     {
-        for(int f = 0; f < NUM_FILES; f++)
-            outFiles[f].format(firstStringLine);
 
-        printSummary(outFiles[F_SHORT],0);      outFiles[F_SHORT].format("\n");
-        printSummary(outFiles[F_SUMMARY],2);    outFiles[F_SUMMARY].format("\n");
-        printByGames(outFiles[F_GAMES],2);      outFiles[F_GAMES].format("\n");
-        printByLevels(outFiles[F_LEVELS],2);    outFiles[F_LEVELS].format("\n");
-        printLastResults(outFiles[F_RAWVER]);   outFiles[F_RAWVER].format("\n");
+        outFiles[F_SHORT].format(firstStringLine);      printSummary(outFiles[F_SHORT],0);      outFiles[F_SHORT].format("\n");
+        outFiles[F_SUMMARY].format(firstStringLine);    printSummary(outFiles[F_SUMMARY],2);    outFiles[F_SUMMARY].format("\n");
+        outFiles[F_GAMES].format(firstStringLine);      printByGames(outFiles[F_GAMES],2);      outFiles[F_GAMES].format("\n");
+        outFiles[F_LEVELS].format(firstStringLine);     printByLevels(outFiles[F_LEVELS],2);    outFiles[F_LEVELS].format("\n");
+        outFiles[F_RAWVER].format(firstStringLine);     printLastResults(outFiles[F_RAWVER]);   outFiles[F_RAWVER].format("\n");
 
+        if((l == 0)&&(g == 0))
+            outFiles[F_RAW].format(firstStringLine);
         printLastResults(outFiles[F_RAW]);
         if(l == resultsLevels[g].length - 1) {
             outFiles[F_RAW].format("  ");

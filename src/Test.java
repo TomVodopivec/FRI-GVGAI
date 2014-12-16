@@ -77,21 +77,36 @@ public class Test
 //        }
 
         //2014_12_12 FRI: for the number of repeats play all games defined in games[], all 5 levels for each
+        FRItesting(gamesPath, seed);
+    }
+
+    public static void FRItesting(String gamesPath, int seed)
+    {
+        //---- config section ----//
+
+        //-- experimental settings
+        String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};   //training CIG2014
+        //String gameSet[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //validation CIG2014
+
+        //String controller = "controllers.sampleMCTS.Agent";
+        String controller = "controllers.sampleOLMCTS.Agent";
+
+        int numLevelsPerGame = 5;
+        int repeats = 100;
+
+        //-- output printing settings
+        int stdOutDepth = 0;   //valid values from 0 to 2
+        int stdOutDetail = 1;  //valid values from 0 to 2
+        boolean printToFiles = false;
+
+        //-- base name of output file(s)
         String wkDir = System.getProperty("user.dir");
         String dateText = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
         String outputFilename = wkDir.substring(wkDir.lastIndexOf("\\")+1)+"__"+dateText;
         String filenameEnding = ".txt";
 
-        int repeats = 100;
-        int numLevelsPerGame = 5;
-        String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};   //training CIG2014
-        //String gameSet[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //validation CIG2014
-        //String controller = "sampleMCTSController";
-        String controller = "sampleOLMCTSController";
-
-        boolean printToFiles = true;
-        int outDepth = 0;   //valid values from 0 to 2
-        int outDetail = 1;  //valid values from 0 to 2
+        //---- END OF CONFIG SECTION ----//
+        // do not change code below here unless you know what you're doing
 
         // initialize structures and files for gathering experimental results
         int numGames = gameSet.length;
@@ -100,14 +115,14 @@ public class Test
         if(printToFiles)
             Metrics.initFiles(outputFilename, filenameEnding);
 
-        //print configuration and stat headers
+        // print configuration and stat headers
         Metrics.printConfiguration(gameSet, numLevelsPerGame, controller, printToFiles);
-        Metrics.printHeader(outDepth,outDetail,"                    "," rep   g l          ", printToFiles);
+        Metrics.printHeader(stdOutDepth,stdOutDetail,"                    "," rep   g l          ", printToFiles);
 
         // run experiments
-        ArcadeMachine.runGamesFRI(repeats, gamesPath, gameSet, numLevelsPerGame, sampleOLMCTSController, seed, outDepth, outDetail, printToFiles);
+        ArcadeMachine.runGamesFRI(repeats, gamesPath, gameSet, numLevelsPerGame, controller, seed, stdOutDepth, stdOutDetail, printToFiles);
 
-        //close files
+        // close files
         if(printToFiles)
             Metrics.closeFiles();
     }

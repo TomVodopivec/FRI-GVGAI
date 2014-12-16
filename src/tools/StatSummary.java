@@ -131,7 +131,7 @@ public class StatSummary {
                 sd = Math.sqrt(num / (n - 1));
             }else {
                 sd = Math.sqrt(num / n);
-                sdRel = sd / mean;
+                sdRel = Math.abs(sd / mean);
             }
             // System.out.println(" Test: sd = " + sd);
             // System.out.println(" Test: n = " + n);

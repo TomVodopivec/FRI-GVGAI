@@ -85,8 +85,9 @@ public class Test
         //---- config section ----//
 
         //-- experimental settings
-        String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};   //training CIG2014
-        //String gameSet[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //validation CIG2014
+        //String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};   //training CIG2014
+        String gameSet[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //validation CIG2014
+        //String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda","camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //training+validation CIG2014
 
         //String controller = "controllers.sampleMCTS.Agent";
         String controller = "controllers.sampleOLMCTS.Agent";

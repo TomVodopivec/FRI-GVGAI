@@ -76,7 +76,7 @@ public class MovingAvatar extends VGDLSprite {
 
         hasMoved = false;
 
-        //ElapsedCpuTimer ect = new ElapsedCpuTimer(ElapsedCpuTimer.TimerType.WALL_TIME);     // Windows ~ not accurate
+        //ElapsedCpuTimer ect = new ElapsedCpuTimer(ElapsedCpuTimer.TimerType.WALL_TIME);     // Windows ~ not measuring CPU time, thus is inaccurate (uses System.nanoTime())
         ElapsedCpuTimer ect = new ElapsedCpuTimer(ElapsedCpuTimer.TimerType.CPU_TIME);      // Unix
         ect.setMaxTimeMillis(CompetitionParameters.ACTION_TIME);
 
@@ -86,16 +86,18 @@ public class MovingAvatar extends VGDLSprite {
         {
             long exceeded =  - ect.remainingTimeMillis();
 
-            if(ect.elapsedMillis() > CompetitionParameters.ACTION_TIME_DISQ)
-            {
-                //The agent took too long to replay. The game is over and the agent is disqualified
-                System.out.println("Too long: " + "(exceeding "+(exceeded)+"ms): controller disqualified.");
-                game.disqualify();
-            }else{
-                System.out.println("Overspent: " + "(exceeding "+(exceeded)+"ms): applying ACTION_NIL.");
-            }
+            if(exceeded > 6) {
+//            if(ect.elapsedMillis() > CompetitionParameters.ACTION_TIME_DISQ)
+//            {
+//                //The agent took too long to replay. The game is over and the agent is disqualified
+//                System.out.println("Too long: " + "(exceeding "+(exceeded)+"ms): controller disqualified.");
+//                game.disqualify();
+//            }else{
+                System.out.println("Overspent: " + "(exceeding " + (exceeded) + "ms): applying ACTION_NIL.");
+                //}
 
-            action = Types.ACTIONS.ACTION_NIL;
+                action = Types.ACTIONS.ACTION_NIL;
+            }
         }
 
         if(!actions.contains(action))

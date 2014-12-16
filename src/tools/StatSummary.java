@@ -28,6 +28,9 @@ public class StatSummary {
     private double mean;
     private double sd;
 
+    private double sdRel;
+    private double conf;
+
     // trick class loader into loading this now
     // private static StatisticalTests dummy = new StatisticalTests();
 
@@ -76,8 +79,36 @@ public class StatSummary {
 
     public double mean() {
         if (!valid)
-            computeStats();
+            computeStats(true);
         return mean;
+    }
+
+    public double conf(double confidenceFactor)
+    {
+        if (!valid)
+            computeStats(true);
+        if(n > 0)
+            conf = confidenceFactor * sd / Math.sqrt(n);
+        return conf;
+    }
+
+    public double getN() {
+        return sd;
+    }
+    public double getSum() {
+        return sd;
+    }
+    public double getMean() {
+        return mean;
+    }
+    public double getSd() {
+        return sd;
+    }
+    public double getSdRel() {
+        return sdRel;
+    }
+    public double getConf() {
+        return conf;
     }
 
     // returns the sum of the squares of the differences
@@ -87,7 +118,7 @@ public class StatSummary {
     }
 
 
-    private void computeStats() {
+    private void computeStats(boolean isSample) {
         if (!valid) {
             mean = sum / n;
             double num = sumsq - (n * mean * mean);
@@ -96,7 +127,12 @@ public class StatSummary {
                 num = 0;
             }
             // System.out.println("Num = " + num);
-            sd = Math.sqrt(num / (n - 1));
+            if(isSample) {
+                sd = Math.sqrt(num / (n - 1));
+            }else {
+                sd = Math.sqrt(num / n);
+                sdRel = sd / mean;
+            }
             // System.out.println(" Test: sd = " + sd);
             // System.out.println(" Test: n = " + n);
             valid = true;
@@ -105,7 +141,13 @@ public class StatSummary {
 
     public double sd() {
         if (!valid)
-            computeStats();
+            computeStats(true);
+        return sd;
+    }
+
+    public double sdPop() {
+        if (!valid)
+            computeStats(false);
         return sd;
     }
 
@@ -150,6 +192,16 @@ public class StatSummary {
         for (double x : xa) {
             add(x);
         }
+    }
+
+    public void addWithMean(double d) {
+        n++;
+        sum += d;
+        sumsq += d * d;
+        min = Math.min(min, d);
+        max = Math.max(max, d);
+        valid = false;
+        mean = sum/n;
     }
 
     public String toString() {

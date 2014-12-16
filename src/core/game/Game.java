@@ -586,7 +586,7 @@ public abstract class Game
             if(score <= 0) score = 1;
 
         //Prints the result: score, time and winner.
-        printResult();
+        //printResult();
 
         return score;
     }

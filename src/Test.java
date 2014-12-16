@@ -1,4 +1,7 @@
 import core.ArcadeMachine;
+import tools.Metrics;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.Random;
 
@@ -25,13 +28,10 @@ public class Test
         String gamesPath = "examples/gridphysics/";
 
         //CIG 2014 Training Set Games
-        String games[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs",
-                "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};
+        String games[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};
 
-        //CIG 2014 Validation Set Games
-        //String games[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster",
-        //        "overload", "pacman", "seaquest", "whackamole", "eggomania"};
-
+        //CIG 2014 Validation Set Gamesxccx
+        //String games[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};
 
         //Other settings
         boolean visuals = true;
@@ -60,20 +60,56 @@ public class Test
         //ArcadeMachine.runGames(game, new String[]{level1, level2}, M, sampleRandomController, null, seed);
 
         //5. This plays N games, in the first L levels, M times each. Actions to file optional (set saveActions to true).
-        int N = 10, L = 5, M = 2;
-        boolean saveActions = false;
-        String[] levels = new String[L];
-        String[] actionFiles = new String[L*M];
-        for(int i = 0; i < N; ++i)
-        {
-            int actionIdx = 0;
-            game = gamesPath + games[i] + ".txt";
-            for(int j = 0; j < L; ++j){
-                levels[j] = gamesPath + games[i] + "_lvl" + j +".txt";
-                if(saveActions) for(int k = 0; k < M; ++k)
-                    actionFiles[actionIdx++] = "actions_game_" + i + "_level_" + j + "_" + k + ".txt";
-            }
-            ArcadeMachine.runGames(game, levels, M, sampleOLMCTSController, saveActions? actionFiles:null, seed);
-        }
+//        int N = 10, L = 5, M = 2;
+//        boolean saveActions = false;
+//        String[] levels = new String[L];
+//        String[] actionFiles = new String[L*M];
+//        for(int i = 0; i < N; ++i)
+//        {
+//            int actionIdx = 0;
+//            game = gamesPath + games[i] + ".txt";
+//            for(int j = 0; j < L; ++j){
+//                levels[j] = gamesPath + games[i] + "_lvl" + j +".txt";
+//                if(saveActions) for(int k = 0; k < M; ++k)
+//                    actionFiles[actionIdx++] = "actions_game_" + i + "_level_" + j + "_" + k + ".txt";
+//            }
+//            ArcadeMachine.runGames(game, levels, M, sampleOLMCTSController, saveActions? actionFiles:null, seed);
+//        }
+
+        //2014_12_12 FRI: for the number of repeats play all games defined in games[], all 5 levels for each
+        String wkDir = System.getProperty("user.dir");
+        String dateText = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+        String outputFilename = wkDir.substring(wkDir.lastIndexOf("\\")+1)+"__"+dateText;
+        String filenameEnding = ".txt";
+
+        int repeats = 100;
+        int numLevelsPerGame = 5;
+        String gameSet[] = new String[]{"aliens", "boulderdash", "butterflies", "chase", "frogs", "missilecommand", "portals", "sokoban", "survivezombies", "zelda"};   //training CIG2014
+        //String gameSet[] = new String[]{"camelRace", "digdug", "firestorms", "infection", "firecaster", "overload", "pacman", "seaquest", "whackamole", "eggomania"};   //validation CIG2014
+        //String controller = "sampleMCTSController";
+        String controller = "sampleOLMCTSController";
+
+        boolean printToFiles = true;
+        int outDepth = 0;   //valid values from 0 to 2
+        int outDetail = 1;  //valid values from 0 to 2
+
+        // initialize structures and files for gathering experimental results
+        int numGames = gameSet.length;
+        Metrics.initStats(numGames, numLevelsPerGame);
+        Metrics.printIgnoreMetrics[Metrics.TIME_INIT] = true;  //example how to disable the output of a specific metric, must be set after .initStats()
+        if(printToFiles)
+            Metrics.initFiles(outputFilename, filenameEnding);
+
+        //print configuration and stat headers
+        Metrics.printConfiguration(gameSet, numLevelsPerGame, controller, printToFiles);
+        Metrics.printHeader(outDepth,outDetail,"                    "," rep   g l          ", printToFiles);
+
+        // run experiments
+        ArcadeMachine.runGamesFRI(repeats, gamesPath, gameSet, numLevelsPerGame, sampleOLMCTSController, seed, outDepth, outDetail, printToFiles);
+
+        //close files
+        if(printToFiles)
+            Metrics.closeFiles();
     }
+
 }

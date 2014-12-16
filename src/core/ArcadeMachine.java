@@ -7,9 +7,9 @@ import core.player.AbstractPlayer;
 import ontology.Types;
 import tools.ElapsedCpuTimer;
 import tools.StatSummary;
+import tools.Metrics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -210,6 +210,86 @@ public class ArcadeMachine
         System.out.println(" *********");
     }
 
+    public static void runGamesFRI(int repeats, String gamesPath, String[] games, int numLevels, String agentName, int randomSeed, int outDepth, int outDetail, boolean printToFiles) {
+
+        //start evaluations
+        for (int r = 0; r < repeats; r++) {
+
+            for (int g = 0; g < games.length; g++) {
+
+                int actionIdx = 0;
+                String game_file = gamesPath + games[g] + ".txt";
+
+                for (int l = 0; l < numLevels; l++) {
+
+                    String level_file = gamesPath + games[g] + "_lvl" + l + ".txt";
+
+                    VGDLFactory.GetInstance().init(); //This always first thing to do.
+                    VGDLRegistry.GetInstance().init();
+
+                    Game toPlay = new VGDLParser().parseGame(game_file);
+
+                    //System.out.println(" ** Playing game " + game_file + ", level " + level_file + " (" + (l + 1) + "/" + numLevels + ") **");
+
+                    //build the level in the game.
+                    toPlay.buildLevel(level_file);
+
+                    //Initialize local measurements array
+                    Metrics.resetLastResults();
+
+                    //Second, create the player.
+                    AbstractPlayer player = ArcadeMachine.createPlayer(agentName, null, toPlay.getObservation(), randomSeed);
+
+                    //Third, warm the game up.
+                    ArcadeMachine.warmUp(toPlay, CompetitionParameters.WARMUP_TIME);
+
+                    //Then, play the game.
+                    double score = toPlay.runGame(player, randomSeed);
+
+                    //Update statistics
+                    int numMoves = toPlay.getGameTick();
+                    if(toPlay.getWinner() == Types.WINNER.PLAYER_WINS){
+                        Metrics.lastResults[Metrics.WIN] = 100.0;   //win rate in %
+                        Metrics.lastResults[Metrics.WIN_SCORE] = score;
+                        Metrics.lastResults[Metrics.WIN_STEPS] = numMoves;
+                        Metrics.ignoreResults[Metrics.LOSE_SCORE] = true;
+                        Metrics.ignoreResults[Metrics.LOSE_STEPS] = true;
+                    }else{
+                        Metrics.lastResults[Metrics.WIN] = 0;
+                        Metrics.ignoreResults[Metrics.WIN_SCORE] = true;
+                        Metrics.ignoreResults[Metrics.WIN_STEPS] = true;
+                        Metrics.lastResults[Metrics.LOSE_SCORE] = score;
+                        Metrics.lastResults[Metrics.LOSE_STEPS] = numMoves;
+                    }
+                    if(numMoves > 0) {
+                        Metrics.lastResults[Metrics.NUM_ITERS] /= toPlay.getGameTick();
+                        Metrics.lastResults[Metrics.NUM_FORWARDS] /= toPlay.getGameTick();
+                    }else{
+                        Metrics.ignoreResults[Metrics.NUM_ITERS] = true;
+                        Metrics.ignoreResults[Metrics.NUM_FORWARDS] = true;
+                    }
+                    Metrics.updateStats(g, l, Metrics.lastResults);     //before calling this procedure, the array Metrics.lastResults[] must have been filled with appropriate values
+
+                    //,Print on stdout and to files
+                    String firstStringLine = String.format("%5d %2d %1d          ",r+1,g+1,l+1);
+                    Metrics.print(System.out, outDepth, outDetail, firstStringLine);
+                    if(printToFiles)
+                        Metrics.updateFiles(r, g, l, firstStringLine);
+
+                    //Finally, when the game is over, we need to tear the player down.
+                    ArcadeMachine.tearPlayerDown(player);
+
+                    //reset the game.
+                    toPlay.reset();
+
+                }
+
+            }
+
+        }
+
+    }
+
     /**
      * Creates a player given its name with package. This class calls the constructor of the agent
      * and initializes the action recording procedure.
@@ -275,8 +355,10 @@ public class ArcadeMachine
 //            }
 //            else
 //            {
-                System.out.println("Controller initialization time: " + timeTaken + " ms.");
+//                System.out.println("Controller initialization time: " + timeTaken + " ms.");
 //            }
+
+            Metrics.lastResults[Metrics.TIME_INIT] = (double)timeTaken;
 
         //This code can throw many exceptions (no time related):
 

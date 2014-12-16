@@ -97,7 +97,7 @@ public class Test
         //-- output printing settings
         int stdOutDepth = 0;   //valid values from 0 to 2
         int stdOutDetail = 1;  //valid values from 0 to 2
-        boolean printToFiles = false;
+        boolean printToFiles = true;
 
         //-- base name of output file(s)
         String wkDir = System.getProperty("user.dir");

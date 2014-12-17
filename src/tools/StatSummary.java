@@ -92,25 +92,6 @@ public class StatSummary {
         return conf;
     }
 
-    public double getN() {
-        return sd;
-    }
-    public double getSum() {
-        return sd;
-    }
-    public double getMean() {
-        return mean;
-    }
-    public double getSd() {
-        return sd;
-    }
-    public double getSdRel() {
-        return sdRel;
-    }
-    public double getConf() {
-        return conf;
-    }
-
     // returns the sum of the squares of the differences
     //  between the mean and the ith values
     public double sumSquareDiff() {
@@ -220,6 +201,21 @@ public class StatSummary {
 
     public double sum(){
         return sum;
+    }
+    public double getN() {
+        return n;
+    }
+    public double getMean() {
+        return mean;
+    }
+    public double getSd() {
+        return sd;
+    }
+    public double getSdRel() {
+        return sdRel;
+    }
+    public double getConf() {
+        return conf;
     }
 
     public StatSummary copy()

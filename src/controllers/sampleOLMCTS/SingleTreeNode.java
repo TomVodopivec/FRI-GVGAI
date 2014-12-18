@@ -71,7 +71,8 @@ public class SingleTreeNode
             //System.out.format("\n%3d  %5.1f  %7.2f",numIters,(double)(initialRemaining-remaining),avgTimeTaken);
         }
 
-        Metrics.lastResults[Metrics.NUM_ITERS] += numIters;
+        if(Metrics.isInitalized)
+            Metrics.lastResults[Metrics.NUM_ITERS] += numIters;
         //System.out.format("\n--- %3d  %5.1f  %7.2f",numIters,(double)(initialRemaining-remaining),avgTimeTaken);
     }
 
@@ -109,7 +110,8 @@ public class SingleTreeNode
 
         //Roll the state
         state.advance(Agent.actions[bestAction]);
-        Metrics.lastResults[Metrics.NUM_FORWARDS]++;
+        if(Metrics.isInitalized)
+            Metrics.lastResults[Metrics.NUM_FORWARDS]++;
 
         SingleTreeNode tn = new SingleTreeNode(this,bestAction,this.m_rnd);
         children[bestAction] = tn;
@@ -147,7 +149,8 @@ public class SingleTreeNode
 
         //Roll the state:
         state.advance(Agent.actions[selected.childIdx]);
-        Metrics.lastResults[Metrics.NUM_FORWARDS]++;
+        if(Metrics.isInitalized)
+            Metrics.lastResults[Metrics.NUM_FORWARDS]++;
 
         return selected;
     }
@@ -161,7 +164,8 @@ public class SingleTreeNode
 
             int action = m_rnd.nextInt(Agent.NUM_ACTIONS);
             state.advance(Agent.actions[action]);
-            Metrics.lastResults[Metrics.NUM_FORWARDS]++;
+            if(Metrics.isInitalized)
+                Metrics.lastResults[Metrics.NUM_FORWARDS]++;
             thisDepth++;
         }
 

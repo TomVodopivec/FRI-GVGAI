@@ -62,7 +62,8 @@ public class SingleTreeNode
         }
         //System.out.println("-- " + numIters + " -- ( " + avgTimeTaken + ")");
 
-        Metrics.lastResults[Metrics.NUM_ITERS] += numIters;
+        if(Metrics.isInitalized)
+            Metrics.lastResults[Metrics.NUM_ITERS] += numIters;
     }
 
     public SingleTreeNode treePolicy() {
@@ -100,7 +101,8 @@ public class SingleTreeNode
 
         StateObservation nextState = state.copy();
         nextState.advance(Agent.actions[bestAction]);
-        Metrics.lastResults[Metrics.NUM_FORWARDS]++;
+        if(Metrics.isInitalized)
+            Metrics.lastResults[Metrics.NUM_FORWARDS]++;
 
         SingleTreeNode tn = new SingleTreeNode(nextState, this, this.m_rnd);
         children[bestAction] = tn;
@@ -187,7 +189,8 @@ public class SingleTreeNode
 
             int action = m_rnd.nextInt(Agent.NUM_ACTIONS);
             rollerState.advance(Agent.actions[action]);
-            Metrics.lastResults[Metrics.NUM_FORWARDS]++;
+            if(Metrics.isInitalized)
+                Metrics.lastResults[Metrics.NUM_FORWARDS]++;
             thisDepth++;
         }
 

@@ -101,6 +101,7 @@ public final class Metrics {
     public static StatSummary[]     resultsSummaryDevGames;         //deviation by games (calculated from last averaged values, relative to mean)
     public static StatSummary[]     resultsSummaryAvgDevLevels;     //avg of resultsGamesDev by games
 
+    public static boolean isInitalized = false;
 
     //-- output files --//
 
@@ -140,6 +141,8 @@ public final class Metrics {
             printIgnoreMetrics[m] = false;
         }
 
+        isInitalized = true;
+
     }
 
     public static void initFiles(String baseFilename, String filenameEnding)
@@ -154,7 +157,6 @@ public final class Metrics {
             System.out.println(e);
         }
 
-        //TODO headers
     }
 
     public static void closeFiles()

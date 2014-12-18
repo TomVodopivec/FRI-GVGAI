@@ -358,7 +358,8 @@ public class ArcadeMachine
 //                System.out.println("Controller initialization time: " + timeTaken + " ms.");
 //            }
 
-            Metrics.lastResults[Metrics.TIME_INIT] = (double)timeTaken;
+            if(Metrics.isInitalized)
+                Metrics.lastResults[Metrics.TIME_INIT] = (double)timeTaken;
 
         //This code can throw many exceptions (no time related):
 

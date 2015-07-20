@@ -92,7 +92,7 @@ public class Test
         //String controller = "controllers.sampleMCTS.Agent";
         String controller = "controllers.sampleOLMCTS.Agent";
 
-        int numLevelsPerGame = 5;
+        int numLevelsPerGame = 1;
         int repeats = 100;
 
         //-- output printing settings

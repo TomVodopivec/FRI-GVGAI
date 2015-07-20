@@ -1,0 +1,3 @@
+WARNING:
+Metrics WinScr and LosScr are bugged in files "__games" and "__levels". The other output files are OK.
+Easiest way to observe statistics is to use "__summary" or "summaryShort" or to use Excel Pivot Tables on "__rawVertical".
